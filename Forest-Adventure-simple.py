@@ -14,7 +14,14 @@ area_map = False
 tarpaulin = False
 penknife = False
 bike = False
+tent = False
+enemy = ""
 days = 0
+
+left_path = False
+right_path = False
+straight_path = False
+
 
 cmdlist = []
 
@@ -46,6 +53,7 @@ def game():
     if cmd == '1':
         person = "Daisy"
         print("You are Daisy")
+        print()
         wait()
         print("You have 10 pieces of equipment. These are:")
         wait()
@@ -83,6 +91,7 @@ def game():
     if cmd == '2':
         person = "Rowan"
         print("You are Rowan")
+        print()
         wait()
         print("You have 10 pieces of equipment. These are:")
         wait()
@@ -118,6 +127,7 @@ def game():
     if cmd == '3':
         person = "Ash"
         print("You are Ash")
+        print()
         wait()
         print("You have 10 pieces of equipment. These are:")
         wait()
@@ -150,6 +160,7 @@ def game():
         
 
 def waytogo():
+    global right_path, left_path, straight_path
     print()
     print("There are three paths ahead of you. You can go")
     print("1. Left")
@@ -161,48 +172,62 @@ def waytogo():
     cmd = getcmd(cmdlist)
 	
     if cmd == '1':
-        print ("You start along the left path.")
+        print("You start along the left path.")
+        left_path = True
         wait()
-        print ("As you are walking along a wolf jumps out in front of you!")
-        fight()
+        print("As you are walking along a wolf jumps out in front of you!")
+        fight_wolf()
 
     if cmd == '2':
-        print ("You start along the right path.")
+        print("You start along the right path.")
+        right_path = True
         wait()
-        print ("It is getting dark.")
-        print ("As you look for a place to spend the night, you notice a light bobbing close to you.")
-        print ("It begins to move away.")
+        print("It is getting dark.")
+        print("As you look for a place to spend the night, you notice a light bobbing close to you.")
+        print("It begins to move away.")
         willowisp()
 
     if cmd == '3':
-        print ("You start along the path straight ahead.")
+        print("You start along the path straight ahead.")
+        straight_path = True
         wait()
-        print ("As the day goes on you start to feel hungry.")
-        print ("You spot a patch of mushrooms growing at the side of the path.")
+        print("As the day goes on you start to feel hungry.")
+        print("You spot a patch of mushrooms growing at the side of the path.")
         poison()
 
 
-def fight():
+def fight_wolf():
+    global left_path, straight_path, right_path
+    right_path = False
+    straight_path = False
+    left_path = True
 
+    enemy = "wolf"
+
+    attack()
+
+def attack():
     if penknife == True:
-        fight_no = int((randint(1, 2)))
-        print("You pull out your penknife and start to fight with the wolf.")
+        fight_no = int(randint(1, 2))
+        print("You pull out your penknife and start to fight with the", enemy ,".")
         if fight_no == 1:
-            wait()
-            print ("The wolf wounded you! You run back into the forest.")
+            print ("The ", enemy ," wounded you! You run back into the forest.")
             hurt()
 
         elif fight_no == 2:
-            wait()
-            print ("You wounded the wolf and it ran away.")
+            print ("You wounded the ", enemy ," and it ran away.")
     else:
-        wait()
-        print ("The wolf wounded you! You run back into the forest.")
+        print ("The ", enemy ," wounded you! You run back into the forest.")
         hurt()
 
-
+def lake():
+    print("You come to the side of a big lake.")
 
 def willowisp():
+    global right_path, left_path, straight_path
+    right_path = True
+    left_path = False
+    straight_path = False
     wait()
     print("Do you decide to follow it?")
     print("1. Yes")
@@ -219,15 +244,28 @@ def willowisp():
         print("As you are walking, the ground starts to feel squelchier underneath.")
         wait()
         print("You suddenly realise you have walked into a bog.")
+        print("Do you")
+        print("1. Turn around and head out of the bog")
+        print("2. Keep going")
+        cmdlist = ['1', '2']
+        cmd = getcmd(cmdlist)
+        if cmd == '1':
+            print ("You turn around and look for a place to sleep.")
+            night() 
+        if cmd == '2':
+            bog()
                 
     if cmd == '2':
         wait()
         print ("You turn around and keep looking for a place to sleep.")
         night()
         
-
+def bog():
+    print("You keep wading deeper into the bog, following the light.")
 
 def poison():
+    global straight_path, food, water
+    straight_path = True
     # do the mushrooms poison you or not - if you eat them
     wait()
     print("You are hungry, and don't know whether to eat them or not.")
@@ -244,29 +282,73 @@ def poison():
             print ("You look the mushroom up and see that the mushroom is poisonous.")
             print("You eat a tin of food instead.")
             food -= 1
+            water -= 1
         else:
-            print("You get poisoned by the mushrooms, but not enouh to kill you.")
+            print("You get poisoned by the mushrooms, but not enough to kill you.")
             hurt()
     if cmd == 2:
         print("You eat a tin of food instead.")
         food -= 1
+        water -= 1
+
+
+
+def rous():
+    # rodents of unusual size
+    print("ROUSes? I don't belive they exist.")
+    print("When you turn around you see a large rodent behind you!")
+    enemy = "rodent"
+    attack()
 
 def night():
+    global tent, left_path, right_path, straight_path, days
     print("The sky gets slowly darker and you decide to find a place to spend the night.")
 
     if tent == True:
         print("You set up your tent and go to sleep.")
     else:
-        print("You go to sleep.")
+        print("You go to sleep in your sleeping bag.")
     wait()
     days += 1
     print("It is morning and you decide to")
     print("1. Keep going along the same path")
     print("2. Go back the way you came")
 
+    cmdlist = ['1', '2']
+    cmd = getcmd(cmdlist)
+
+    if cmd == '1':
+        if left_path == True:
+            print("You keep walking along the left path.")
+            lake()
+        if right_path == True:
+            print("You keep walking along the right path.")
+            bog()
+        if straight_path == True:
+            print("You keep walking along the path straight ahead.")
+            rous()
+    if cmd == '2':
+        print("You turn back along the path.")
+        waytogo()
+
+
 def hurt():
+    global days
     print("You take a day to recover.")
     days += 1
+
+def dead():
+    print("You died.")
+    again = input("Do you want to play again? (y/n)")
+    if again in ['y','Y','yes','Yes','YES']:
+        game()
+    else:
+        sys.exit(0)
+
+
+def out_of_forest():
+    print("You made it out of the forest in ", days ,"days.")
+
 
 def wait():
     time.sleep(1)
@@ -280,4 +362,4 @@ def getcmd(cmdlist):
 # main program
 game()
 waytogo()
-getcmd(cmdlist)
+#getcmd(cmdlist)
