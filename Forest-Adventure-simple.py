@@ -2,7 +2,7 @@
 
 # NOT FINISHED
 
-from random import randint
+import random
 import time
 
 cook_food = False
@@ -220,22 +220,22 @@ def fight_wolf():
 
 def attack():
     if penknife == True:
-        fight_no = int(randint(1, 2))
+        fight_hurt = random.choice([True, False])
         print("You pull out your penknife and start to fight with the", enemy ,".")
-        if fight_no == 1:
-            print ("The ", enemy ," wounded you! You run back into the forest.")
+        if fight_hurt == True:
+            print ("The ", enemy ," wounded you! You run back into the forest cover.")
             hurt()
 
-        elif fight_no == 2:
+        elif fight_hurt == False:
             print ("You wounded the ", enemy ," and it ran away.")
     else:
-        print ("The ", enemy ," wounded you! You run back into the forest.")
+        print ("The ", enemy ," wounded you! You run back into the forest cover.")
         hurt()
 
     if enemy == "wolf":
-        night() # change later
+        night()
     elif enemy == "rodent":
-        night() # change later
+        night()
 
 
 def pool():
@@ -329,13 +329,20 @@ def poison():
     
     if cmd == 1:
         if id_book == True:
-            print ("You look the mushroom up and see that the mushroom is poisonous.")
+            print ("You look the mushroom up and see that it is poisonous.")
             print("You eat a tin of food instead.")
             food -= 1
             water -= 1
         else:
-            print("You get poisoned by the mushrooms, but not enough to kill you.")
-            hurt()
+            poisoned = random.choice([True, False])
+            if poisoned = True:
+                print("The mushroom is poisonous!")
+                print("You ate enough mushrooms to really feel the poison.")
+                print("You start to hallucinate...")
+                dead()
+            if poisoned = False:
+                print("The mushroom was poisonous, but didn't kill you.")
+                hurt()
     if cmd == 2:
         print("You eat a tin of food instead.")
         food -= 1
@@ -345,6 +352,7 @@ def lake():
     print("You come to the side of a big lake.")
 
 def rous():
+    global enemy
     # rodents of unusual size
     print("You are walking through a swamp when you see a sign saying 'Beware of the rodents of unusual size'.")
     print("ROUSes? You don't belive they exist.")
@@ -385,10 +393,16 @@ def night():
         print("You turn back along the path.")
         waytogo()
 
+def starved():
+    print("You start to feel lightheaded.")
+    print("You realize that you have run out of food and water!")
+    print("You have no energy to find anything.")
+    print("You decide to lie down for a little sleep...")
+    dead()
 
 def hurt():
     global days
-    print("You take a day to recover.")
+    print("You take a day to recover from it.")
     days += 1
 
 def dead():
@@ -403,6 +417,7 @@ def dead():
 
 
 def out_of_forest():
+    wait()
     print("You made it out of the forest in ", days ,"days.")
     print("You only had ", food, " tins of food and ", water ," units of water left!")
     print()
@@ -426,4 +441,6 @@ def getcmd(cmdlist):
 # main program
 game()
 waytogo()
-#getcmd(cmdlist)
+while True:
+    if food == 0 and water == 0:
+        starved()
