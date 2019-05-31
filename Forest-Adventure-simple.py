@@ -1,33 +1,46 @@
 # Written by Daisy Simmons
 
-# NOT FINISHED
-
+from random import randint
 import random
 import time
 
-cook_food = False
-id_book = False
-make_fire = False
-food = 0 # each tin is 1 unit
-water = 0 # 10 units of water for each litre of water
-torch = 0 # can use 50 times 
-area_map = False
-tarpaulin = False
-penknife = False
-bike = False
-tent = False
-enemy = ""
-days = 0
+def setup():
+    global cook_food, id_book, make_fire, food, water, torch, area_map, tarpaulin
+    global penknife, bike, tent, enemy, days, done_wolf, done_pool, done_poison
+    global done_rous, done_willowisp, done_bog, done_tree, cmdlist, climbing, follow_willowisp
+    # sets up all the variables needed
+    cook_food = False
+    id_book = False
+    make_fire = False
+    food = 0 # each tin is 1 unit
+    water = 0 # 10 units of water for each litre of water
+    torch = 0 # can use 50 times 
+    area_map = False
+    tarpaulin = False
+    penknife = False
+    bike = False
+    tent = False
+    climbing = False
 
-left_path = False
-right_path = False
-straight_path = False
+    enemy = ""
+    days = 0
 
+    # to see where to go next
+    done_wolf = False
+    done_pool = False
+    done_poison = False
+    done_rous= False
+    done_willowisp = False
+    done_bog = False
+    done_tree = False
+    follow_willowisp = False
 
-cmdlist = []
+    cmdlist = []
+    game()
 
 def game():
-    global person
+    global person, cook_food, id_book, make_fire, food, water, torch
+    global area_map, tarpaulin, penknife, bike, tent, climbing
 
     print ("Welcome to Forest Adventure!")
     wait()
@@ -60,7 +73,6 @@ def game():
         wait()
         print("a sleeping bag")
         # all have sleeping bag so no need for variable
-        sleeping_bag = True
         wait()
         print("an ID book for foraging")
         id_book = True
@@ -97,6 +109,7 @@ def game():
         print("You have 10 pieces of equipment. These are:")
         wait()
         print("a set of climbing gear (with a harness and some rope)")
+        climbing = True
         wait()
         print("a 1 litre waterbottle")
         water = 10
@@ -161,85 +174,81 @@ def game():
         
 
 def waytogo():
-    global right_path, left_path, straight_path
+    global area_map
+    # the user chooses which way to go
     print()
     print("There are three paths ahead of you. You can go")
     print("1. Left")
     print("2. Right")
     print("3. Straight ahead")
+    print()
     wait()
 
+    # if they have a map of the area then they can use it to find out what lies ahead
     if area_map == True:
         print("You check your map to find the best way to go.")
         print("It says that the left path looks mostly clear.")
         print("There is a swamp further along the path straight ahead.")
         print("There is a bog along the right path.")
         print("The map doesn't tell you which path to take to get out of the forest, but at least you know what's ahead")
+        print()
     
     cmdlist = ['1', '2', '3']
     cmd = getcmd(cmdlist)
 	
     if cmd == '1':
         print("You start along the left path.")
-        right_path = False
-        straight_path = False
-        left_path = True
-
         wait()
-        print("As you are walking along a wolf jumps out in front of you!")
-        fight_wolf()
+        wolf()
 
     if cmd == '2':
         print("You start along the right path.")
-        right_path = True
-        left_path = False
-        straight_path = False
         wait()
-        print("It is getting dark.")
-        print("As you look for a place to spend the night, you notice a light bobbing close to you.")
-        print("It begins to move away.")
         willowisp()
 
     if cmd == '3':
         print("You start along the path straight ahead.")
-        straight_path = True
-        right_path = False
-        left_path = False
         wait()
-        print("As the day goes on you start to feel hungry.")
-        print("You spot a patch of mushrooms growing at the side of the path.")
         poison()
 
 
-def fight_wolf():
+def wolf():
+    global enemy, done_wolf
+    done_wolf = True
     global enemy
+    print()
+    print("As you are walking along a wolf jumps out in front of you!")
     print("The wolf growls and looks like it's going to jump at you!")
     enemy = "wolf"
 
     attack()
 
+
 def attack():
+    global penknife
+    print()
     if penknife == True:
         fight_hurt = random.choice([True, False])
-        print("You pull out your penknife and start to fight with the", enemy ,".")
+        print("You pull out your penknife and start to fight with the", enemy,".")
         if fight_hurt == True:
-            print ("The ", enemy ," wounded you! You run back into the forest cover.")
+            print ("The", enemy ,"wounded you! You run back into the forest cover.")
+            print()
             hurt()
 
         elif fight_hurt == False:
-            print ("You wounded the ", enemy ," and it ran away.")
+            print ("You wounded the", enemy ,"and it ran away.")
     else:
-        print ("The ", enemy ," wounded you! You run back into the forest cover.")
+        print ("The", enemy ,"wounded you! You run back into the forest cover.")
+        print()
         hurt()
 
-    if enemy == "wolf":
-        night()
-    elif enemy == "rodent":
-        night()
+    night()
 
 
 def pool():
-    global water, cook_food, make_fire
+    global water, cook_food, make_fire, done_pool
+    done_pool = True
+    print()
     print("You come to a large pool of stagnant water.")
     print("You decide to ")
     print("1. Fill up your water bottle(s)")
@@ -252,20 +261,27 @@ def pool():
         if cook_food == True and make_fire == True:
             print("You boil the water in your saucepan to get rid of any germs.")
             water += 5 
-            # next module
+            night()
         else:
             print("You drink some of the water, as you are thirsty.")
+            print()
+            wait()
             water += 5
             print("Later in the evening you start to feel sick and start vomiting.")
             print("You fall asleep, but are hot and clammy.")
             print("You start hallucinating...")
             dead()
     if cmd == '2':
-        pass
+        night()
 
 
 def willowisp():
+    global done_willowisp, follow_willowisp
+    done_willowisp = True
     wait()
+    print("It is getting dark.")
+    print("As you look for a place to spend the night, you notice a light bobbing close to you.")
+    print("It begins to move away.")
     print("Do you decide to follow it?")
     print("1. Yes")
     print("2. No")
@@ -275,6 +291,7 @@ def willowisp():
     cmd = getcmd(cmdlist)
 	
     if cmd == '1':
+        follow_willowisp = True
         wait()
         print("You start to follow the light. It is blue and slowly bobs up and down.")
         wait()
@@ -297,11 +314,35 @@ def willowisp():
         print ("You turn around and keep looking for a place to sleep.")
         night()
         
+
 def bog():
-    print("You keep wading deeper into the bog, following the light.")
-    tree()
+    global done_bog
+    done_bog = True
+    print()
+    if follow_willowisp == True:
+        print("You keep wading deeper into the bog, following the light.")
+        print("The mud gets deeper and thicker.")
+        wait()
+        print("You are stuck!")
+        print("The mud seems to be pulling you down.")
+        print("As you struggle, the mud closes around you.")
+        print("The mud closes over your head as you take one last breath...")
+        dead()
+    if follow_willowisp == False:
+        print("You keep wading deeper into the bog.")
+        print("You move away from where the flickering light is.")
+        print("You have heard tales of lights like these, called will-o-wisps.")
+        print("They lure travellers into deep mud and drown them.")
+        print()
+        print("You safely get to the edge of the bog.")
+        
+        tree()
+
 
 def tree():
+    global done_tree, food
+    done_tree = True
+    print()
     print("You come across an apple tree with apples on.")
     print("Do you")
     print("1. Climb the tree to collect some apples")
@@ -311,13 +352,32 @@ def tree():
     cmd = getcmd(cmdlist)
 	
     if cmd == '1':
-        pass
+        if climbing == True:
+            print("You use your climbing gear to climb the tree easily.")
+            print("You pick some apples.")
+            food += 8
+            night()
+        else:
+            print("You climb the tree.")
+            fall = randint(1,2)
+            if fall == 1:
+                print("Your foot slips, but you manage to put it back in place.")
+                print("You pick some apples.")
+                food += 7
+                night()
+            if fall == 2:
+                print("Your foot slips and you fall out of the tree!")
+                print("Luckily it isn't very high and you only twist your ankle.")
+                hurt()
 
 
 def poison():
-    global food, water
+    global food, water, done_poison
+    done_poison = True
     # do the mushrooms poison you or not - if you eat them
     wait()
+    print("As the day goes on you start to feel hungry.")
+    print("You spot a patch of mushrooms growing at the side of the path.")
     print("You are hungry, and don't know whether to eat them or not.")
     print("Do you decide to eat them?")
     print("1. Yes")
@@ -332,27 +392,38 @@ def poison():
             print ("You look the mushroom up and see that it is poisonous.")
             print("You eat a tin of food instead.")
             food -= 1
-            water -= 1
+            water -= 2
+            next_way()
         else:
-            poisoned = random.choice([True, False])
-            if poisoned = True:
+            #poisoned = random.choice([True, False])
+            poisoned = randint(1,2)
+            #if poisoned == True:
+            if poisoned == 1:
                 print("The mushroom is poisonous!")
                 print("You ate enough mushrooms to really feel the poison.")
                 print("You start to hallucinate...")
                 dead()
-            if poisoned = False:
+            #elif poisoned == False:
+            if poisoned == 2:
                 print("The mushroom was poisonous, but didn't kill you.")
                 hurt()
     if cmd == 2:
         print("You eat a tin of food instead.")
         food -= 1
-        water -= 1
+        water -= 2
+        next_way()
+
 
 def lake():
     print("You come to the side of a big lake.")
+    
+    
+    out_of_forest()
+
 
 def rous():
-    global enemy
+    global enemy, done_rous
+    done_rous = True
     # rodents of unusual size
     print("You are walking through a swamp when you see a sign saying 'Beware of the rodents of unusual size'.")
     print("ROUSes? You don't belive they exist.")
@@ -363,7 +434,8 @@ def rous():
 
 
 def night():
-    global tent, left_path, right_path, straight_path, days
+    global tent, days, food, water
+    print()
     print("The sky gets slowly darker and you decide to find a place to spend the night.")
 
     if tent == True:
@@ -372,7 +444,18 @@ def night():
         print("You go to sleep in your sleeping bag.")
     wait()
     days += 1
-    print("It is morning and you decide to")
+    food -= 1
+    water -= 2
+    print("It is morning and you get out of your sleeping bag.")
+    next_way()
+
+
+def next_way():
+    global food, water
+    food -= 1
+    water -= 2
+    print()
+    print("You decide to")
     print("1. Keep going along the same path")
     print("2. Go back the way you came")
 
@@ -380,15 +463,56 @@ def night():
     cmd = getcmd(cmdlist)
 
     if cmd == '1':
-        if left_path == True:
-            print("You keep walking along the left path.")
+        print("You keep walking along the path.")
+        # if they have only done the wolf module, then do the pool module 
+        if done_wolf == True and done_pool == False and done_willowisp == False \
+        and done_bog == False and done_tree == False and done_poison == False and done_rous == False:
             pool()
-        if right_path == True:
-            print("You keep walking along the right path.")
+            
+        # if they have only done the willowisp module, then do the bog module 
+        if done_willowisp == True and done_wolf == False and done_pool == False \
+        and done_bog == False and done_tree == False and done_poison == False and done_rous == False:
             bog()
-        if straight_path == True:
-            print("You keep walking along the path straight ahead.")
+
+        # if they have only done the poison module, then do the rous module 
+        if done_poison== True and done_wolf == False and done_pool == False and done_willowisp == False \
+        and done_bog == False and done_tree == False and done_rous == False:
             rous()
+
+        # if they have done both the wolf and pool modules, then do the poison module 
+        if done_wolf == True and done_pool == True and done_poison == False and done_willowisp == False \
+        and done_bog == False and done_tree == False and done_rous == False:
+            poison()
+
+        # if they have done both the poison and rous modules, then do the tree module 
+        if done_poison == True and done_rous == True and done_pool == False and done_willowisp == False \
+        and done_bog == False and done_tree == False and done_rous == False:
+            tree()
+
+        # if they have done all the willowisp and bog and tree modules, then do the wolf module 
+        if done_willowisp == True and done_bog == True and done_tree == True and done_pool == False \
+        and done_wolf == False and done_rous == False and done_poison == False:
+            wolf()
+
+        # if they have done all the willowisp, bog, wolf and tree modules, then do the poison module 
+        if done_willowisp == True and done_bog == True and done_tree == True and done_pool == True \
+        and done_wolf == True and done_rous == False and done_poison == False:
+            poison()
+
+        # if they have done all the willowisp, bog, poison, rous and tree modules, then do the wolf module 
+        if done_willowisp == True and done_bog == True and done_tree == True and done_pool == False \
+        and done_wolf == False and done_rous == True and done_poison == True:
+            wolf()
+
+        # if they have done all the wolf, pool, poison and rous modules, then do the willowisp module 
+        if done_willowisp == False and done_bog == False and done_tree == False and done_pool == True \
+        and done_wolf == True and done_rous == True and done_poison == True:
+            willowisp()
+
+        # if they have done all the modules, then do the lake module - the final one
+        if done_wolf == True and done_pool == True and done_willowisp == True \
+        and done_bog == True and done_tree == True and done_poison == True and done_rous == True:
+            lake()
     if cmd == '2':
         print("You turn back along the path.")
         waytogo()
@@ -401,9 +525,12 @@ def starved():
     dead()
 
 def hurt():
-    global days
+    global days, food ,water
     print("You take a day to recover from it.")
     days += 1
+    food -= 3
+    water -= 6
+    next_way()
 
 def dead():
     wait()
@@ -411,7 +538,7 @@ def dead():
     print()
     again = input("Do you want to play again? (y/n)")
     if again in ['y','Y','yes','Yes','YES']:
-        game()
+        setup()
     else:
         sys.exit(0)
 
@@ -423,7 +550,7 @@ def out_of_forest():
     print()
     again = input("Do you want to play again? (y/n)")
     if again in ['y','Y','yes','Yes','YES']:
-        game()
+        setup()
     else:
         sys.exit(0)
 
@@ -434,12 +561,13 @@ def wait():
 
 def getcmd(cmdlist):
     cmd = input("\nEnter your number: ")
+    print()
     if cmd in cmdlist:
         return cmd
 
 
 # main program
-game()
+setup()
 waytogo()
 while True:
     if food == 0 and water == 0:
