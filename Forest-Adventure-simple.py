@@ -5,6 +5,7 @@
 from random import randint
 import time
 
+cook_food = False
 id_book = False
 make_fire = False
 food = 0 # each tin is 1 unit
@@ -167,13 +168,23 @@ def waytogo():
     print("2. Right")
     print("3. Straight ahead")
     wait()
+
+    if area_map == True:
+        print("You check your map to find the best way to go.")
+        print("It says that the left path looks mostly clear.")
+        print("There is a swamp further along the path straight ahead.")
+        print("There is a bog along the right path.")
+        print("The map doesn't tell you which path to take to get out of the forest, but at least you know what's ahead")
     
     cmdlist = ['1', '2', '3']
     cmd = getcmd(cmdlist)
 	
     if cmd == '1':
         print("You start along the left path.")
+        right_path = False
+        straight_path = False
         left_path = True
+
         wait()
         print("As you are walking along a wolf jumps out in front of you!")
         fight_wolf()
@@ -181,6 +192,8 @@ def waytogo():
     if cmd == '2':
         print("You start along the right path.")
         right_path = True
+        left_path = False
+        straight_path = False
         wait()
         print("It is getting dark.")
         print("As you look for a place to spend the night, you notice a light bobbing close to you.")
@@ -190,6 +203,8 @@ def waytogo():
     if cmd == '3':
         print("You start along the path straight ahead.")
         straight_path = True
+        right_path = False
+        left_path = False
         wait()
         print("As the day goes on you start to feel hungry.")
         print("You spot a patch of mushrooms growing at the side of the path.")
@@ -197,11 +212,8 @@ def waytogo():
 
 
 def fight_wolf():
-    global left_path, straight_path, right_path
-    right_path = False
-    straight_path = False
-    left_path = True
-
+    global enemy
+    print("The wolf growls and looks like it's going to jump at you!")
     enemy = "wolf"
 
     attack()
@@ -220,14 +232,39 @@ def attack():
         print ("The ", enemy ," wounded you! You run back into the forest.")
         hurt()
 
-def lake():
-    print("You come to the side of a big lake.")
+    if enemy == "wolf":
+        night() # change later
+    elif enemy == "rodent":
+        night() # change later
+
+
+def pool():
+    global water, cook_food, make_fire
+    print("You come to a large pool of stagnant water.")
+    print("You decide to ")
+    print("1. Fill up your water bottle(s)")
+    print("2. Keep going")
+
+    cmdlist = ['1', '2']
+    cmd = getcmd(cmdlist)
+
+    if cmd == '1':
+        if cook_food == True and make_fire == True:
+            print("You boil the water in your saucepan to get rid of any germs.")
+            water += 5 
+            # next module
+        else:
+            print("You drink some of the water, as you are thirsty.")
+            water += 5
+            print("Later in the evening you start to feel sick and start vomiting.")
+            print("You fall asleep, but are hot and clammy.")
+            print("You start hallucinating...")
+            dead()
+    if cmd == '2':
+        pass
+
 
 def willowisp():
-    global right_path, left_path, straight_path
-    right_path = True
-    left_path = False
-    straight_path = False
     wait()
     print("Do you decide to follow it?")
     print("1. Yes")
@@ -262,10 +299,23 @@ def willowisp():
         
 def bog():
     print("You keep wading deeper into the bog, following the light.")
+    tree()
+
+def tree():
+    print("You come across an apple tree with apples on.")
+    print("Do you")
+    print("1. Climb the tree to collect some apples")
+    print("2. Keep on walking")
+
+    cmdlist = ['1', '2']
+    cmd = getcmd(cmdlist)
+	
+    if cmd == '1':
+        pass
+
 
 def poison():
-    global straight_path, food, water
-    straight_path = True
+    global food, water
     # do the mushrooms poison you or not - if you eat them
     wait()
     print("You are hungry, and don't know whether to eat them or not.")
@@ -291,14 +341,18 @@ def poison():
         food -= 1
         water -= 1
 
-
+def lake():
+    print("You come to the side of a big lake.")
 
 def rous():
     # rodents of unusual size
-    print("ROUSes? I don't belive they exist.")
+    print("You are walking through a swamp when you see a sign saying 'Beware of the rodents of unusual size'.")
+    print("ROUSes? You don't belive they exist.")
     print("When you turn around you see a large rodent behind you!")
     enemy = "rodent"
     attack()
+
+
 
 def night():
     global tent, left_path, right_path, straight_path, days
@@ -320,7 +374,7 @@ def night():
     if cmd == '1':
         if left_path == True:
             print("You keep walking along the left path.")
-            lake()
+            pool()
         if right_path == True:
             print("You keep walking along the right path.")
             bog()
@@ -338,7 +392,9 @@ def hurt():
     days += 1
 
 def dead():
+    wait()
     print("You died.")
+    print()
     again = input("Do you want to play again? (y/n)")
     if again in ['y','Y','yes','Yes','YES']:
         game()
@@ -348,6 +404,14 @@ def dead():
 
 def out_of_forest():
     print("You made it out of the forest in ", days ,"days.")
+    print("You only had ", food, " tins of food and ", water ," units of water left!")
+    print()
+    again = input("Do you want to play again? (y/n)")
+    if again in ['y','Y','yes','Yes','YES']:
+        game()
+    else:
+        sys.exit(0)
+
 
 
 def wait():
