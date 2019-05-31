@@ -464,6 +464,7 @@ def next_way():
 
     if cmd == '1':
         print("You keep walking along the path.")
+        # ONE condition
         # if they have only done the wolf module, then do the pool module 
         if done_wolf == True and done_pool == False and done_willowisp == False \
         and done_bog == False and done_tree == False and done_poison == False and done_rous == False:
@@ -479,35 +480,49 @@ def next_way():
         and done_bog == False and done_tree == False and done_rous == False:
             rous()
 
-        # if they have done both the wolf and pool modules, then do the poison module 
+        # TWO conditions
+        # if they have done both the wolf and pool modules, then do the willowisp module
         if done_wolf == True and done_pool == True and done_poison == False and done_willowisp == False \
         and done_bog == False and done_tree == False and done_rous == False:
-            poison()
+            willowisp()
 
         # if they have done both the poison and rous modules, then do the tree module 
         if done_poison == True and done_rous == True and done_pool == False and done_willowisp == False \
         and done_bog == False and done_tree == False and done_rous == False:
             tree()
 
-        # if they have done all the willowisp and bog and tree modules, then do the wolf module 
+        # THREE conditions
+        # if they have done all the willowisp, bog and tree modules, then do the wolf module 
         if done_willowisp == True and done_bog == True and done_tree == True and done_pool == False \
         and done_wolf == False and done_rous == False and done_poison == False:
             wolf()
+
+        # if they have done both the wolf, willowisp and pool modules, then do the  module
+        if done_wolf == True and done_pool == True and done_poison == False and done_willowisp == True \
+        and done_bog == False and done_tree == False and done_rous == False:
+            willowisp()
+
+        # FOUR conditions
+        # if they have done all the willowisp, bog, wolf and tree modules, then do the pool module 
+        if done_willowisp == True and done_bog == True and done_tree == True and done_pool == False \
+        and done_wolf == True and done_rous == False and done_poison == False:
+            pool()
 
         # if they have done all the willowisp, bog, wolf and tree modules, then do the poison module 
         if done_willowisp == True and done_bog == True and done_tree == True and done_pool == True \
         and done_wolf == True and done_rous == False and done_poison == False:
             poison()
 
-        # if they have done all the willowisp, bog, poison, rous and tree modules, then do the wolf module 
-        if done_willowisp == True and done_bog == True and done_tree == True and done_pool == False \
-        and done_wolf == False and done_rous == True and done_poison == True:
-            wolf()
-
         # if they have done all the wolf, pool, poison and rous modules, then do the willowisp module 
         if done_willowisp == False and done_bog == False and done_tree == False and done_pool == True \
         and done_wolf == True and done_rous == True and done_poison == True:
             willowisp()
+
+        # FIVE conditions
+        # if they have done all the willowisp, bog, poison, rous and tree modules, then do the wolf module 
+        if done_willowisp == True and done_bog == True and done_tree == True and done_pool == False \
+        and done_wolf == False and done_rous == True and done_poison == True:
+            wolf()
 
         # if they have done all the modules, then do the lake module - the final one
         if done_wolf == True and done_pool == True and done_willowisp == True \
@@ -546,7 +561,7 @@ def dead():
 def out_of_forest():
     wait()
     print("You made it out of the forest in ", days ,"days.")
-    print("You only had ", food, " tins of food and ", water ," units of water left!")
+    print("You only had ", food, " bits of food and ", water ," units of water left!")
     print()
     again = input("Do you want to play again? (y/n)")
     if again in ['y','Y','yes','Yes','YES']:
