@@ -187,10 +187,15 @@ def waytogo():
     # if they have a map of the area then they can use it to find out what lies ahead
     if area_map == True:
         print("You check your map to find the best way to go.")
+        wait()
         print("It says that the left path looks mostly clear.")
+        wait()
         print("There is a swamp further along the path straight ahead.")
+        wait()
         print("There is a bog along the right path.")
+        wait()
         print("The map doesn't tell you which path to take to get out of the forest, but at least you know what's ahead")
+        wait()
         print()
     
     cmdlist = ['1', '2', '3']
@@ -215,16 +220,13 @@ def waytogo():
 def wolf():
     global enemy, done_wolf
     done_wolf = True
-    global enemy
     print()
     print("As you are walking along a wolf jumps out in front of you!")
     print("The wolf growls and looks like it's going to jump at you!")
-    enemy = "wolf"
-
-    attack()
+    attack("wolf")
 
 
-def attack():
+def attack(enemy):
     global penknife
     print()
     if penknife == True:
@@ -395,15 +397,12 @@ def poison():
             water -= 2
             next_way()
         else:
-            #poisoned = random.choice([True, False])
             poisoned = randint(1,2)
-            #if poisoned == True:
             if poisoned == 1:
                 print("The mushroom is poisonous!")
                 print("You ate enough mushrooms to really feel the poison.")
                 print("You start to hallucinate...")
                 dead()
-            #elif poisoned == False:
             if poisoned == 2:
                 print("The mushroom was poisonous, but didn't kill you.")
                 hurt()
@@ -417,7 +416,6 @@ def poison():
 def lake():
     print("You come to the side of a big lake.")
     
-    
     out_of_forest()
 
 
@@ -428,8 +426,7 @@ def rous():
     print("You are walking through a swamp when you see a sign saying 'Beware of the rodents of unusual size'.")
     print("ROUSes? You don't belive they exist.")
     print("When you turn around you see a large rodent behind you!")
-    enemy = "rodent"
-    attack()
+    attack("rodent")
 
 
 
@@ -563,7 +560,7 @@ def out_of_forest():
     print("You made it out of the forest in ", days ,"days.")
     print("You only had ", food, " bits of food and ", water ," units of water left!")
     print()
-    again = input("Do you want to play again? (y/n)")
+    again = input("Do you want to play again? (y/n): ")
     if again in ['y','Y','yes','Yes','YES']:
         setup()
     else:
