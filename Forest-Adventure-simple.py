@@ -12,8 +12,8 @@ def setup():
     cook_food = False
     id_book = False
     make_fire = False
-    food = 1 # each tin is 1 unit
-    water = 1 # 10 units of water for each litre of water
+    food = 10 # each tin is 1 unit
+    water = 10 # 10 units of water for each litre of water
     torch = 0 # can use 50 times 
     area_map = False
     tarpaulin = False
@@ -86,10 +86,10 @@ def game():
         # all have compass so no need for variable
         wait()
         print("a backpack full of tinned food") # 15 tins
-        food = 15
+        food += 15
         wait()
         print("a big 1 litre waterbottle")
-        water = 10
+        water += 10
         wait()
         print("a saucepan")
         cook_food = True
@@ -110,8 +110,9 @@ def game():
         print("a set of climbing gear (with a harness and some rope)")
         climbing = True
         wait()
-        print("a 1 litre waterbottle")
-        water = 10
+        print("a 1 litre waterbottle and a few tins of food") # 5 tins
+        water += 10
+        food += 5
         wait()
         print("a tarpaulin")
         tarpaulin = True
@@ -148,8 +149,8 @@ def game():
         bike = True
         wait()
         print("a backpack full of tinned food and 2 1-litre waterbottles") # 10 tins
-        food = 10
-        water = 20
+        food += 10
+        water += 20
         wait()
         print("some outdoor clothes (including a raincoat)")
         wait()
@@ -169,15 +170,11 @@ def game():
         print("and a torch with a limited amount of power.")
         torch = 50
         wait()
-            
+    waytogo()
         
 
 def waytogo():
-    #global area_map
     # the user chooses which way to go
-    print("You spot a bramble bush beside the path.")
-    print("You pick some berries and eat them.")
-    food += 2
     print()
     print("There are three paths ahead of you. You can go")
     print("1. Left")
@@ -226,6 +223,7 @@ def wolf():
     print("As you are walking along a wolf jumps out in front of you!")
     print("The wolf growls and looks like it's going to jump at you!")
     attack("wolf")
+    pool()
 
 def pool():
     global water, cook_food, make_fire, done_pool
@@ -288,6 +286,7 @@ def willowisp():
         cmdlist = ['1', '2']
         cmd = getcmd(cmdlist)
         if cmd == '1':
+            follow_willowisp = False
             print ("You turn around and look for a place to sleep.")
             night() 
             bog()
@@ -433,7 +432,7 @@ def night():
     global days, food, water
     print()
     print("The sky gets slowly darker and you decide to find a place to spend the night.")
-
+    print()
     if tent == True:
         print("You set up your tent and go to sleep.")
     else:
@@ -443,6 +442,7 @@ def night():
     food -= 2
     water -= 4
     print("It is morning and you get out of your sleeping bag.")
+    print()
     
 
         
@@ -467,17 +467,10 @@ def attack(enemy):
     night()
 
 
+
 def starved():
     print("You start to feel lightheaded.")
-    print("You realize that you have run out of food!")
-    print("You try to find something, but there's nothing edible around.")
-    print("You decide to lie down for a little sleep...")
-    print()
-    dead()
-
-def dehydrated():
-    print("You start to feel lightheaded.")
-    print("You realize that you have run out of water!")
+    print("You realize that you have run out of water and/or food!")
     print("You have no energy to find anything.")
     print("You decide to lie down for a little sleep...")
     print()
@@ -533,9 +526,6 @@ def getcmd(cmdlist):
 
 # main program
 setup()
-waytogo()
 while True:
-    if food >= 0:
+    if food <= 0 and water <= 0:
         starved()
-    if water >= 0:
-        dehydrated()
