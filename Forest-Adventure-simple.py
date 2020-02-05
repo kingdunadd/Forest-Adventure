@@ -1,6 +1,6 @@
 # Written by Daisy Simmons
 
-from random import randint
+#from random import randint
 import random
 import time
 
@@ -174,7 +174,7 @@ def game():
         
 
 def waytogo():
-    global area_map
+    #global area_map
     # the user chooses which way to go
     print()
     print("There are three paths ahead of you. You can go")
@@ -218,7 +218,7 @@ def waytogo():
 
 
 def wolf():
-    global enemy, done_wolf
+    global done_wolf
     done_wolf = True
     print()
     print("As you are walking along a wolf jumps out in front of you!")
