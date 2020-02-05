@@ -1,19 +1,19 @@
 # Written by Daisy Simmons
 
-#from random import randint
+from random import randint
 import random
 import time
 
 def setup():
     global cook_food, id_book, make_fire, food, water, torch, area_map, tarpaulin
-    global penknife, bike, tent, enemy, days, done_wolf, done_pool, done_poison
+    global penknife, bike, tent, days, done_wolf, done_pool, done_poison
     global done_rous, done_willowisp, done_bog, done_tree, cmdlist, climbing, follow_willowisp
     # sets up all the variables needed
     cook_food = False
     id_book = False
     make_fire = False
-    food = 0 # each tin is 1 unit
-    water = 0 # 10 units of water for each litre of water
+    food = 1 # each tin is 1 unit
+    water = 1 # 10 units of water for each litre of water
     torch = 0 # can use 50 times 
     area_map = False
     tarpaulin = False
@@ -22,7 +22,6 @@ def setup():
     tent = False
     climbing = False
 
-    enemy = ""
     days = 0
 
     # to see where to go next
@@ -194,7 +193,7 @@ def waytogo():
         wait()
         print("There is a bog along the right path.")
         wait()
-        print("The map doesn't tell you which path to take to get out of the forest, but at least you know what's ahead")
+        print("The map doesn't tell you which path to take to get out of the forest, but at least you know what's ahead.")
         wait()
         print()
     
@@ -214,7 +213,7 @@ def waytogo():
     if cmd == '3':
         print("You start along the path straight ahead.")
         wait()
-        poison()
+        mushrooms()
 
 
 def wolf():
@@ -224,28 +223,6 @@ def wolf():
     print("As you are walking along a wolf jumps out in front of you!")
     print("The wolf growls and looks like it's going to jump at you!")
     attack("wolf")
-
-
-def attack(enemy):
-    global penknife
-    print()
-    if penknife == True:
-        fight_hurt = random.choice([True, False])
-        print("You pull out your penknife and start to fight with the", enemy,".")
-        if fight_hurt == True:
-            print ("The", enemy ,"wounded you! You run back into the forest cover.")
-            print()
-            hurt()
-
-        elif fight_hurt == False:
-            print ("You wounded the", enemy ,"and it ran away.")
-    else:
-        print ("The", enemy ,"wounded you! You run back into the forest cover.")
-        print()
-        hurt()
-
-    night()
-
 
 def pool():
     global water, cook_food, make_fire, done_pool
@@ -373,7 +350,7 @@ def tree():
                 hurt()
 
 
-def poison():
+def mushrooms():
     global food, water, done_poison
     done_poison = True
     # do the mushrooms poison you or not - if you eat them
@@ -412,13 +389,6 @@ def poison():
         water -= 2
         next_way()
 
-
-def lake():
-    print("You come to the side of a big lake.")
-    
-    out_of_forest()
-
-
 def rous():
     global enemy, done_rous
     done_rous = True
@@ -428,10 +398,13 @@ def rous():
     print("When you turn around you see a large rodent behind you!")
     attack("rodent")
 
-
+def lake():
+    print("You come to the side of a big lake.")
+    
+    out_of_forest()
 
 def night():
-    global tent, days, food, water
+    global days, food, water
     print()
     print("The sky gets slowly darker and you decide to find a place to spend the night.")
 
@@ -461,79 +434,47 @@ def next_way():
 
     if cmd == '1':
         print("You keep walking along the path.")
-        # ONE condition
-        # if they have only done the wolf module, then do the pool module 
-        if done_wolf == True and done_pool == False and done_willowisp == False \
-        and done_bog == False and done_tree == False and done_poison == False and done_rous == False:
-            pool()
-            
-        # if they have only done the willowisp module, then do the bog module 
-        if done_willowisp == True and done_wolf == False and done_pool == False \
-        and done_bog == False and done_tree == False and done_poison == False and done_rous == False:
-            bog()
 
-        # if they have only done the poison module, then do the rous module 
-        if done_poison== True and done_wolf == False and done_pool == False and done_willowisp == False \
-        and done_bog == False and done_tree == False and done_rous == False:
+        if done_wolf == True:
+            pool()
+        if done_poison == True:
             rous()
-
-        # TWO conditions
-        # if they have done both the wolf and pool modules, then do the willowisp module
-        if done_wolf == True and done_pool == True and done_poison == False and done_willowisp == False \
-        and done_bog == False and done_tree == False and done_rous == False:
-            willowisp()
-
-        # if they have done both the poison and rous modules, then do the tree module 
-        if done_poison == True and done_rous == True and done_pool == False and done_willowisp == False \
-        and done_bog == False and done_tree == False and done_rous == False:
+        if done_willowisp == True:
             tree()
-
-        # THREE conditions
-        # if they have done all the willowisp, bog and tree modules, then do the wolf module 
-        if done_willowisp == True and done_bog == True and done_tree == True and done_pool == False \
-        and done_wolf == False and done_rous == False and done_poison == False:
-            wolf()
-
-        # if they have done both the wolf, willowisp and pool modules, then do the  module
-        if done_wolf == True and done_pool == True and done_poison == False and done_willowisp == True \
-        and done_bog == False and done_tree == False and done_rous == False:
-            willowisp()
-
-        # FOUR conditions
-        # if they have done all the willowisp, bog, wolf and tree modules, then do the pool module 
-        if done_willowisp == True and done_bog == True and done_tree == True and done_pool == False \
-        and done_wolf == True and done_rous == False and done_poison == False:
-            pool()
-
-        # if they have done all the willowisp, bog, wolf and tree modules, then do the poison module 
-        if done_willowisp == True and done_bog == True and done_tree == True and done_pool == True \
-        and done_wolf == True and done_rous == False and done_poison == False:
-            poison()
-
-        # if they have done all the wolf, pool, poison and rous modules, then do the willowisp module 
-        if done_willowisp == False and done_bog == False and done_tree == False and done_pool == True \
-        and done_wolf == True and done_rous == True and done_poison == True:
-            willowisp()
-
-        # FIVE conditions
-        # if they have done all the willowisp, bog, poison, rous and tree modules, then do the wolf module 
-        if done_willowisp == True and done_bog == True and done_tree == True and done_pool == False \
-        and done_wolf == False and done_rous == True and done_poison == True:
-            wolf()
-
-        # if they have done all the modules, then do the lake module - the final one
-        if done_wolf == True and done_pool == True and done_willowisp == True \
-        and done_bog == True and done_tree == True and done_poison == True and done_rous == True:
+        if done_rous == True:
             lake()
+
     if cmd == '2':
         print("You turn back along the path.")
         waytogo()
+        
+
+def attack(enemy):
+    print()
+    if penknife == True:
+        fight_hurt = random.choice([True, False])
+        print("You pull out your penknife and start to fight with the", enemy,".")
+        if fight_hurt == True:
+            print ("The", enemy ,"wounded you! You run back into the forest cover.")
+            print()
+            hurt()
+
+        elif fight_hurt == False:
+            print ("You wounded the", enemy ,"and it ran away.")
+    else:
+        print ("The", enemy ,"wounded you! You run back into the forest cover.")
+        print()
+        hurt()
+
+    night()
+
 
 def starved():
     print("You start to feel lightheaded.")
     print("You realize that you have run out of food and water!")
     print("You have no energy to find anything.")
     print("You decide to lie down for a little sleep...")
+    print()
     dead()
 
 def hurt():
@@ -548,7 +489,8 @@ def dead():
     wait()
     print("You died.")
     print()
-    again = input("Do you want to play again? (y/n)")
+    again = input("Do you want to play again? (y/n): ")
+    print()
     if again in ['y','Y','yes','Yes','YES']:
         setup()
     else:
@@ -574,13 +516,17 @@ def wait():
 def getcmd(cmdlist):
     cmd = input("\nEnter your number: ")
     print()
-    if cmd in cmdlist:
-        return cmd
+    try:
+        if cmd in cmdlist:
+            return cmd
+    except ValueError:
+        cmd = 1
+
 
 
 # main program
 setup()
 waytogo()
 while True:
-    if food == 0 and water == 0:
+    if food >= 0 and water >= 0:
         starved()
